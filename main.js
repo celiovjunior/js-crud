@@ -3,8 +3,12 @@
 const openModal = () => document.getElementById('modal')
     .classList.add('active')
 
-const closeModal = () => document.getElementById('modal')
-    .classList.remove('active')
+const closeModal = () => {
+    clearFields();
+
+    document.getElementById('modal').classList.remove('active');
+
+}
 
 const tempClient = {
     nome: "Rodrigo",
@@ -37,12 +41,44 @@ const readClient = () => getLocalStorage()
 const createClient = (client) => {
     const dbClient = getLocalStorage()
     dbClient.push(client)
-    setLocalStorate(dbClient)
+    setLocalStorage(dbClient)
+}
+
+// Validando campos do formulario
+const isValidFields = () => {
+    return document.getElementById('form').reportValidity();
+}
+
+// Interacao com o front
+
+const clearFields = () => {
+    const fields = document.querySelectorAll('.modal-field');
+    fields.forEach(field => field.value = "");
+}
+
+const saveClient = () => {
+    if(isValidFields()) {
+        const client = {
+            nome: document.getElementById('nome').value,
+            email: document.getElementById('email').value,
+            celular: document.getElementById('celular').value,
+            cidade: document.getElementById('cidade').value,
+        }
+
+        createClient(client);
+        
+        clearFields();
+        
+        closeModal();
+    }
 }
 
 // Eventos
 document.getElementById('cadastrarCliente')
-    .addEventListener('click', openModal)
+    .addEventListener('click', openModal);
 
 document.getElementById('modalClose')
-    .addEventListener('click', closeModal)
+    .addEventListener('click', closeModal);
+
+document.getElementById('salvar')
+    .addEventListener('click', saveClient);

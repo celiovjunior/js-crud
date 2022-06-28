@@ -94,13 +94,13 @@ const createRow = (client, index) => {
 const clearTable = () => {
     const rows = document.querySelectorAll('#tableClient>tbody tr')
     rows.forEach(row => row.parentNode.removeChild(row))
-}
+};
 
 const updateTable = () => {
     const dbClient = readClient();
     clearTable();
     dbClient.forEach(createRow);
-}
+};
 
 const fillFields = (client) => {
     document.getElementById('nome').value = client.nome;
@@ -108,7 +108,7 @@ const fillFields = (client) => {
     document.getElementById('celular').value = client.celular;
     document.getElementById('cidade').value = client.cidade;
     document.getElementById('nome').dataset.index = client.index;
-}
+};
 
 const editSingleClient = (index) => {
     const client = readClient()[index];
@@ -116,7 +116,7 @@ const editSingleClient = (index) => {
 
     fillFields(client);
     openModal()
-}
+};
 
 const editDelete = (event) => {
     if(event.target.type == 'button') {
@@ -133,7 +133,7 @@ const editDelete = (event) => {
             }
         }
     }
-}
+};
 
 updateTable()
 
@@ -148,4 +148,4 @@ document.getElementById('salvar')
     .addEventListener('click', saveClient);
 
 document.querySelector('#tableClient>tbody')
-    .addEventListener('click', editDelete)
+    .addEventListener('click', editDelete);

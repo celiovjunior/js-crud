@@ -61,17 +61,21 @@ const saveClient = () => {
             celular: document.getElementById('celular').value,
             cidade: document.getElementById('cidade').value,
         }
-
-        createClient(client);
-        
-        updateTable();
-        
-        closeModal();
+        const index = document.getElementById('nome').dataset.index;
+        if(index == 'new') {
+            createClient(client);
+            updateTable();            
+            closeModal();
+        } else {
+            updateClient(index, client);
+            updateTable();
+            closeModal();
+        }
     }
 }
 
 // Setando um novo cliente na table do front
-const createRow = (client) => {
+const createRow = (client, index) => {
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
     <td>${client.nome}</td>
@@ -79,8 +83,8 @@ const createRow = (client) => {
     <td>${client.celular}</td>
     <td>${client.cidade}</td>
     <td>
-        <button type="button" class="button green">editar</button>
-        <button type="button" class="button red">excluir</button>
+        <button type="button" class="button green" data-action='edit-${index}'>Editar</button>
+        <button type="button" class="button red" data-action='delete-${index}'>Excluir</button>
     </td>
     `
 
@@ -98,6 +102,34 @@ const updateTable = () => {
     dbClient.forEach(createRow);
 }
 
+const fillFields = (client) => {
+    document.getElementById('nome').value = client.nome;
+    document.getElementById('email').value = client.email;
+    document.getElementById('celular').value = client.celular;
+    document.getElementById('cidade').value = client.cidade;
+    document.getElementById('nome').dataset.index = client.index;
+}
+
+const editSingleClient = (index) => {
+    const client = readClient()[index];
+    client.index = index;
+
+    fillFields(client);
+    openModal()
+}
+
+const editDelete = (event) => {
+    if(event.target.type == 'button') {
+        const [action, index] = event.target.dataset.action.split('-');
+        
+        if(action == 'edit') {
+            editSingleClient(index)
+        } else {
+            console.log("deletando cliente")
+        }
+    }
+}
+
 updateTable()
 
 // Eventos
@@ -109,3 +141,6 @@ document.getElementById('modalClose')
 
 document.getElementById('salvar')
     .addEventListener('click', saveClient);
+
+document.querySelector('#tableClient>tbody')
+    .addEventListener('click', editDelete)

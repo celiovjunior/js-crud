@@ -5,17 +5,15 @@ const openModal = () => document.getElementById('modal')
 
 const closeModal = () => {
     clearFields();
-
     document.getElementById('modal').classList.remove('active');
-
 }
 
-const tempClient = {
-    nome: "Rodrigo",
-    email: "rod@email.com",
-    celular: "85 9 98765432",
-    cidade: "Recife"
-}
+// const tempClient = {
+//     nome: "Rodrigo",
+//     email: "rod@email.com",
+//     celular: "85 9 98765432",
+//     cidade: "Recife"
+// }
 
 const getLocalStorage = () => JSON.parse(localStorage.getItem('db_client')) ?? []
 const setLocalStorage = (dbClient) => localStorage.setItem("db_client", JSON.stringify(dbClient))
@@ -50,7 +48,6 @@ const isValidFields = () => {
 }
 
 // Interacao com o front
-
 const clearFields = () => {
     const fields = document.querySelectorAll('.modal-field');
     fields.forEach(field => field.value = "");
@@ -67,11 +64,41 @@ const saveClient = () => {
 
         createClient(client);
         
-        clearFields();
+        updateTable();
         
         closeModal();
     }
 }
+
+// Setando um novo cliente na table do front
+const createRow = (client) => {
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+    <td>${client.nome}</td>
+    <td>${client.email}</td>
+    <td>${client.celular}</td>
+    <td>${client.cidade}</td>
+    <td>
+        <button type="button" class="button green">editar</button>
+        <button type="button" class="button red">excluir</button>
+    </td>
+    `
+
+    document.querySelector('#tableClient>tbody').appendChild(newRow);
+};
+
+const clearTable = () => {
+    const rows = document.querySelectorAll('#tableClient>tbody tr')
+    rows.forEach(row => row.parentNode.removeChild(row))
+}
+
+const updateTable = () => {
+    const dbClient = readClient();
+    clearTable();
+    dbClient.forEach(createRow);
+}
+
+updateTable()
 
 // Eventos
 document.getElementById('cadastrarCliente')
